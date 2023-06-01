@@ -23,45 +23,6 @@ from scipy.integrate import odeint
 np.random.seed(8008)
 
 
-def get_lorenz_vals():
-    def lorenz(xyz, *, s=10, r=28, b=2.667):
-        """
-        Parameters
-        ----------
-        xyz : array-like, shape (3,)
-           Point of interest in three-dimensional space.
-        s, r, b : float
-           Parameters defining the Lorenz attractor.
-
-        Returns
-        -------
-        xyz_dot : array, shape (3,)
-           Values of the Lorenz attractor's partial derivatives at *xyz*.
-        """
-        x, y, z = xyz
-        x_dot = s*(y - x)
-        y_dot = r*x - y - x*z
-        z_dot = x*y - b*z
-        return np.array([x_dot, y_dot, z_dot])
-
-    dt = 0.01
-    num_steps = 1000
-
-    xyzs = np.empty((num_steps + 1, 3))
-    xyzs[0] = (0., 1., 1.05)
-    for i in range(num_steps):
-        xyzs[i + 1] = xyzs[i] + lorenz(xyzs[i]) * dt
-
-    # ax = plt.figure().add_subplot(projection='3d')
-    # ax.plot(*xyzs.T, lw=0.5)
-    # ax.set_xlabel("X Axis")
-    # ax.set_ylabel("Y Axis")
-    # ax.set_zlabel("Z Axis")
-    # ax.set_title("Lorenz Attractor")
-    # plt.show()
-    return xyzs.T
-
-
 def lorenz_63(u, t):
     r = 28
     s = 10
@@ -104,7 +65,7 @@ def find_approximation(system: callable, t0: float, t1: float,
     W_LR = (U_o @ Phi.T @ inv(Phi @ Phi.T + beta * np.identity(D_r)))
 
     U_hat = np.atleast_2d(U[:, 0]).T
-    for _ in range(N):
+    for t in range(N):
         u_n = U_hat[:, -1]
         phi = np.tanh(np.atleast_2d(W_in @ u_n).T + b_in)
         u_np1 = W_LR @ phi
@@ -114,18 +75,19 @@ def find_approximation(system: callable, t0: float, t1: float,
 
 # D_r_vals = [1, 10, 100, 1000, 10000]
 # N = 300
-fig = plt.figure()
-ax3d = fig.add_subplot(1, 2, 1, projection='3d')
-ax2d = fig.add_subplot(1, 2, 2)
-U, U_hat = find_approximation(lorenz, 0, 30, N=3000, D_r=5000)
-ax3d.plot(*U_hat, label=r"$\hat{U}$")
-ax3d.plot(*U, label="$U$")
-ax3d.legend()
-ax2d.semilogy(np.linspace(0, 30, 3001), np.apply_along_axis(np.linalg.norm, 0, (U_hat - U)))
-ax2d.set_xlabel("t")
-ax2d.set_ylabel("Log error")
-ax3d.set_title("Lorenz-63 System")
-fig.tight_layout(pad=3.0)
+def lorenz_63_plot():
+    fig = plt.figure()
+    ax3d = fig.add_subplot(1, 2, 1, projection='3d')
+    ax2d = fig.add_subplot(1, 2, 2)
+    U, U_hat = find_approximation(lorenz, 0, 30, N=3000, D_r=5000)
+    ax3d.plot(*U_hat, label=r"$\hat{U}$")
+    ax3d.plot(*U, label="$U$")
+    ax3d.legend()
+    ax2d.semilogy(np.linspace(0, 30, 3001), np.apply_along_axis(np.linalg.norm, 0, (U_hat - U)))
+    ax2d.set_xlabel("t")
+    ax2d.set_ylabel("Log error")
+    ax3d.set_title("Lorenz-63 System")
+    fig.tight_layout(pad=3.0)
 #
 # for dr_ind, D_r in enumerate(D_r_vals):
 #     U, U_hat = find_approximation(linear_system, 0, 2*np.pi, N=N, D_r=D_r)
@@ -145,5 +107,5 @@ fig.tight_layout(pad=3.0)
 # print(norm_error)
 #
 # axs[1].plot(norm_error)
-plt.show()
 
+plt.show()
