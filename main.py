@@ -19,6 +19,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from numpy import sin, cos
 from numpy.linalg import inv
+from scipy.integrate import odeint
 np.random.seed(8008)
 
 
@@ -43,7 +44,6 @@ def get_lorenz_vals():
         z_dot = x*y - b*z
         return np.array([x_dot, y_dot, z_dot])
 
-
     dt = 0.01
     num_steps = 1000
 
@@ -60,6 +60,23 @@ def get_lorenz_vals():
     # ax.set_title("Lorenz Attractor")
     # plt.show()
     return xyzs.T
+
+
+def lorenz_63(u, t):
+    r = 28
+    s = 10
+    b = 8/3
+    x, y, z = u
+    x_dot = s * (y - x)
+    y_dot = r * x - y - x * z
+    z_dot = x * y - b * z
+    return np.array([x_dot, y_dot, z_dot])
+
+
+def lorenz(t):
+    u0 = np.array([0., 1., 1.05])
+    sol: np.ndarray = odeint(lorenz_63, u0, t)
+    return sol[:, :3].transpose()
 
 
 def linear_system(t, c1=1, c2=1):
@@ -97,17 +114,23 @@ def find_approximation(system: callable, t0: float, t1: float,
 
 # D_r_vals = [1, 10, 100, 1000, 10000]
 # N = 300
-fig, ax = plt.subplots()
+fig = plt.figure()
+ax3d = fig.add_subplot(1, 2, 1, projection='3d')
+ax2d = fig.add_subplot(1, 2, 2)
+U, U_hat = find_approximation(lorenz, 0, 5, N=1000, D_r=5000)
+ax3d.plot(*U_hat)
+ax3d.plot(*U)
+ax2d.plot(np.log10(np.apply_along_axis(np.linalg.norm, 0, (U_hat - U))))
 #
 # for dr_ind, D_r in enumerate(D_r_vals):
 #     U, U_hat = find_approximation(linear_system, 0, 2*np.pi, N=N, D_r=D_r)
 #     ax.plot(np.log10(np.apply_along_axis(np.linalg.norm, 0, (U_hat - U))), label=f"D_r = {D_r}")
 #
 # ax.legend()
-for D_r in range(1, 1000, 20):
-    U, U_hat = find_approximation(linear_system, 0, 2*np.pi, N=300, D_r=D_r)
-    if D_r == 1: ax.plot(*U)
-    ax.plot(*U_hat)
+# for D_r in range(1, 1000, 20):
+#     U, U_hat = find_approximation(get_lorenz_vals, 0, 2*np.pi, N=300, D_r=D_r)
+#     if D_r == 1: ax.plot(*U)
+#     ax.plot(*U_hat)
 
 # axs[0].plot(*U)
 # axs[0].plot(*U_hat)
