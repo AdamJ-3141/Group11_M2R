@@ -16,7 +16,6 @@ Output:
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
 from numpy import sin, cos
 from numpy.linalg import inv
 from scipy.integrate import odeint
@@ -41,7 +40,6 @@ def lorenz(t):
 
 
 def linear_system(t, c1=1, c2=1):
-
     """
     Return values for the system
 
@@ -71,41 +69,3 @@ def find_approximation(system: callable, t0: float, t1: float,
         u_np1 = W_LR @ phi
         U_hat = np.concatenate((U_hat, u_np1), axis=1)
     return U, U_hat
-
-
-# D_r_vals = [1, 10, 100, 1000, 10000]
-# N = 300
-def lorenz_63_plot():
-    fig = plt.figure()
-    ax3d = fig.add_subplot(1, 2, 1, projection='3d')
-    ax2d = fig.add_subplot(1, 2, 2)
-    U, U_hat = find_approximation(lorenz, 0, 30, N=3000, D_r=5000)
-    ax3d.plot(*U_hat, label=r"$\hat{U}$")
-    ax3d.plot(*U, label="$U$")
-    ax3d.legend()
-    ax2d.semilogy(np.linspace(0, 30, 3001), np.apply_along_axis(np.linalg.norm, 0, (U_hat - U)))
-    ax2d.set_xlabel("t")
-    ax2d.set_ylabel("Log error")
-    ax3d.set_title("Lorenz-63 System")
-    fig.tight_layout(pad=3.0)
-#
-# for dr_ind, D_r in enumerate(D_r_vals):
-#     U, U_hat = find_approximation(linear_system, 0, 2*np.pi, N=N, D_r=D_r)
-#     ax.plot(np.log10(np.apply_along_axis(np.linalg.norm, 0, (U_hat - U))), label=f"D_r = {D_r}")
-#
-# ax.legend()
-# for D_r in range(1, 1000, 20):
-#     U, U_hat = find_approximation(get_lorenz_vals, 0, 2*np.pi, N=300, D_r=D_r)
-#     if D_r == 1: ax.plot(*U)
-#     ax.plot(*U_hat)
-
-# axs[0].plot(*U)
-# axs[0].plot(*U_hat)
-# axs[0].set_box_aspect(1)
-#
-# norm_error = np.apply_along_axis(np.linalg.norm, 0, (U_hat - U))
-# print(norm_error)
-#
-# axs[1].plot(norm_error)
-
-plt.show()
