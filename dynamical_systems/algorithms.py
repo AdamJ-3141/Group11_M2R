@@ -33,14 +33,14 @@ def propagate_until_diverge(U, t1, W_LR, W_in, b_in):
     N = U.shape[1] - 1
     dt = t1 / (N + 1)
     U_hat = np.atleast_2d(U[:, 0]).T
-    tau_f = np.inf
+    tau_f = t1
     for n in range(N):
         u_hat_n = U_hat[:, -1]
         u_n = U[:, n]
         phi = np.tanh(np.atleast_2d(W_in @ u_hat_n).T + b_in)
         u_np1 = W_LR @ phi
         rel_error = np.linalg.norm(u_hat_n - u_n)/np.linalg.norm(u_n)
-        if rel_error > 0.05:
+        if rel_error > 0.005:
             tau_f = n * dt
             return tau_f
         U_hat = np.concatenate((U_hat, u_np1), axis=1)
