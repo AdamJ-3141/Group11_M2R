@@ -32,7 +32,7 @@ def lorenz_63_system(u, t):
 
 
 def lorenz_63(t):
-    u0 = np.array([0., 1., 1.05])
+    u0 = np.array([1., 1., 1.])
     sol: np.ndarray = odeint(lorenz_63_system, u0, t)
     return sol[:, :3].transpose()
 
