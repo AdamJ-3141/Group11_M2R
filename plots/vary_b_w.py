@@ -40,7 +40,7 @@ if __name__ == "__main__":
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
     im = ax.imshow(T_f_matrix, origin="lower", extent=[0, w_max, 0, b_max], aspect=w_max/b_max, cmap="inferno")
-    cbar = plt.colorbar(im, ax=ax, cmap="inferno", label=r"$\tau_f")
+    cbar = plt.colorbar(im, ax=ax, cmap="inferno", label=r"$\tau_f$")
     cbar.set_label("Colorbar")
     ax.set_xlabel("w")
     ax.set_ylabel("b")

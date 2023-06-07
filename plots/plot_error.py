@@ -1,3 +1,8 @@
+"""
+Plots the exact lorenz63 solution vs the approximated solution
+using the propagator.
+"""
+
 from dynamical_systems import linear_system, lorenz_63, find_approximation
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,7 +14,7 @@ def lorenz_63_plot():
     ax2d = fig.add_subplot(1, 2, 2)
     U, U_hat = find_approximation(lorenz_63, 0, 30, N=3000, D_r=5000)
     ax3d.plot(*U_hat, label=r"$\hat{U}$")
-    ax3d.plot(*U, label="z$U$")
+    ax3d.plot(*U, label="$U$")
     ax3d.legend()
     ax2d.semilogy(np.linspace(0, 30, 3001), np.apply_along_axis(np.linalg.norm, 0, (U_hat - U)))
     ax2d.set_xlabel("t")
@@ -18,8 +23,8 @@ def lorenz_63_plot():
     fig.tight_layout(pad=3.0)
 
 
-D_r_vals = [1, 10, 100, 1000, 10000]
-N = 300
+# D_r_vals = [1, 10, 100, 1000, 10000]
+# N = 300
 #
 #
 # for dr_ind, D_r in enumerate(D_r_vals):

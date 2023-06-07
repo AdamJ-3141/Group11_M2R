@@ -1,3 +1,19 @@
+"""
+Algorithm
+Input: Time series u_n, n=1,2,...,N
+Parameters:
+    Regularization parameter b
+    Reservoir Dimension D_r
+    Internal parameters W_in, B_in
+
+Construct observation matrix U = [u_1, u_2, u_3, ..., u_n]
+Construct random features Phi_n = tanh(W_in @ U_nm1 + b_in)
+Construct feature matrix Phi = [Phi_1, ..., Phi_N]
+
+Output:
+    W_LR = U @ Phi.t @ (Phi @ Phi.t + bI)^-1
+"""
+
 from numpy.linalg import inv
 import numpy as np
 np.random.seed(42493874)
