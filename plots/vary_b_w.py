@@ -10,13 +10,13 @@ import datetime
 
 
 if __name__ == "__main__":
-    b_size = 600
+    b_size = 500
     b_max = 6
-    w_size = 600
+    w_size = 500
     w_max = 0.5
-    T = 25
-    N = 3000
-    D_r = 500
+    T = 20
+    N = 2000
+    D_r = 1000
     realisations = 1
     T_f_matrix = np.empty((b_size+1, w_size+1))
     i = 0
@@ -29,8 +29,8 @@ if __name__ == "__main__":
             elapsed = time.time() - start
             p = i/((b_size+1) * (w_size+1))
             secs = round(elapsed/p - elapsed)
-            print(f"{round(100*p, 2)}% - Estimated Time:"
-                  f" {datetime.timedelta(seconds=secs)}", end="\r")
+            print(f"{round(100*p, 2)}%  -  Estimated Time:"
+                  f"{datetime.timedelta(seconds=secs)}", end="\r")
             w = w_ * (w_max/(w_size+1))
             for _ in range(realisations):
                 U, W_LR, W_in, b_in, dt = find_approximation(lorenz_63, T, N=N, D_r=D_r, b=b, w=w)
@@ -39,9 +39,10 @@ if __name__ == "__main__":
             T_f_matrix[b_, w_] = sum(tau_f_list)/realisations
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
+    ax.set_title(r"A plot of forecast time $\tau_f$ for different $w$ and $b$.")
     im = ax.imshow(T_f_matrix, origin="lower", extent=[0, w_max, 0, b_max], aspect=w_max/b_max, cmap="inferno")
-    cbar = plt.colorbar(im, ax=ax, cmap="inferno", label=r"$\tau_f$")
-    cbar.set_label("Colorbar")
-    ax.set_xlabel("w")
-    ax.set_ylabel("b")
+    cbar = plt.colorbar(im, ax=ax, cmap="inferno")
+    cbar.set_label(r"$\tau_f$")
+    ax.set_xlabel("$w$")
+    ax.set_ylabel("$b$")
     plt.show()
