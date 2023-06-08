@@ -14,7 +14,7 @@ if __name__ == "__main__":
     b_max = 6
     w_size = 500
     w_max = 0.5
-    T = 20
+    T = 25
     N = 2000
     D_r = 1000
     realisations = 1
