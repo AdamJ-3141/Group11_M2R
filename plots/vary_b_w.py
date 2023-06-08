@@ -10,13 +10,13 @@ import datetime
 
 
 if __name__ == "__main__":
-    b_size = 500
-    b_max = 6
-    w_size = 500
+    b_size = 10
+    b_max = 4
+    w_size = 10
     w_max = 0.5
     T = 25
     N = 2000
-    D_r = 1000
+    D_r = 1500
     realisations = 1
     T_f_matrix = np.empty((b_size+1, w_size+1))
     i = 0
@@ -30,7 +30,7 @@ if __name__ == "__main__":
             p = i/((b_size+1) * (w_size+1))
             secs = round(elapsed/p - elapsed)
             print(f"{round(100*p, 2)}%  -  Estimated Time:"
-                  f"{datetime.timedelta(seconds=secs)}", end="\r")
+                  f" {datetime.timedelta(seconds=secs)}", end="\r")
             w = w_ * (w_max/(w_size+1))
             for _ in range(realisations):
                 U, W_LR, W_in, b_in, dt = find_approximation(lorenz_63, T, N=N, D_r=D_r, b=b, w=w)
@@ -46,3 +46,4 @@ if __name__ == "__main__":
     ax.set_xlabel("$w$")
     ax.set_ylabel("$b$")
     plt.show()
+    plt.savefig(f"plot_images/w-b_{w_size}x{b_size}_N{N}Dr{D_r}.png")
