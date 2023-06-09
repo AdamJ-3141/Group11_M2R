@@ -10,14 +10,15 @@ import datetime
 
 
 if __name__ == "__main__":
-    b_size = 10
+    b_size = 8
     b_max = 4
-    w_size = 10
+    w_size = 8
     w_max = 0.4
     T = 400
-    N = 20000
-    D_r = 500
-    realisations = 10
+    N = 200000
+    D_r = 300
+    noisy = False
+    realisations = 5
     T_f_mean = np.empty((b_size+1, w_size+1))
     T_f_sd = np.empty((b_size + 1, w_size + 1))
     i = 0
@@ -34,7 +35,7 @@ if __name__ == "__main__":
                   f" {datetime.timedelta(seconds=secs)}", end="\r")
             w = w_ * (w_max/(w_size+1))
             for _ in range(realisations):
-                U, W_LR, W_in, b_in, dt = find_approximation(lorenz_63, T, N=N, D_r=D_r, b=b, w=w)
+                U, W_LR, W_in, b_in, dt = find_approximation(lorenz_63, T, N=N, D_r=D_r, b=b, w=w, noisy=noisy)
                 tau_f = propagate_until_diverge(U, T, W_LR, W_in, b_in)
                 tau_f_list.append(tau_f)
             T_f_mean[b_, w_] = sum(tau_f_list)/realisations
