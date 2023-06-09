@@ -8,9 +8,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot_error(system: callable, T, N, D_r):
+def plot_error(system: callable, T, N, D_r, noisy=False):
     fig = plt.figure()
-    U, W_LR, W_in, b_in, dt = find_approximation(system, T, N=N, D_r=D_r, noisy=True)
+    U, W_LR, W_in, b_in, dt = find_approximation(system, T, N=N, D_r=D_r, noisy=noisy)
     U_hat = propagate_from_u0(U, W_LR, W_in, b_in)
     if U.shape[0] == 3:
         ax3d = fig.add_subplot(1, 2, 1, projection='3d')
@@ -24,10 +24,10 @@ def plot_error(system: callable, T, N, D_r):
     ax2d.semilogy(np.linspace(0, T, N+1), np.apply_along_axis(np.linalg.norm, 0, (U_hat - U)))
     ax2d.set_xlabel("t")
     ax2d.set_ylabel("Log error")
-    ax3d.set_title(r"Solution $U$ and approximation $\hat{U}$")
+    ax3d.set_title(("Noisy " if noisy else "")+r"Solution $U$ and approximation $\hat{U}$")
     fig.tight_layout(pad=1.0)
     plt.show()
 
 
 if __name__ == "__main__":
-    plot_error(lorenz_63, 20, 2000, 2000)
+    plot_error(linear_system, 2*np.pi, 200, 100, noisy=True)
