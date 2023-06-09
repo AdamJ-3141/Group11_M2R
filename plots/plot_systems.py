@@ -19,7 +19,7 @@ def linear_plot():
 
 def lorenz_63_plot():
     t = np.linspace(0, 40, 5000)
-    U = lorenz_63(t)
+    U = lorenz_63(t, False, 0)
     fig = plt.figure()
     ax3d = fig.add_subplot(1, 1, 1, projection='3d')
     ax3d.plot(*U)

@@ -10,7 +10,7 @@ import numpy as np
 
 def plot_error(system: callable, T, N, D_r):
     fig = plt.figure()
-    U, W_LR, W_in, b_in, dt = find_approximation(system, T, N=N, D_r=D_r, w=0.5, b=4, noisy=False)
+    U, W_LR, W_in, b_in, dt = find_approximation(system, T, N=N, D_r=D_r, w=0.5, b=4)
     U_hat = propagate_from_u0(U, W_LR, W_in, b_in)
     if U.shape[0] == 3:
         ax3d = fig.add_subplot(1, 2, 1, projection='3d')
@@ -30,4 +30,4 @@ def plot_error(system: callable, T, N, D_r):
 
 
 if __name__ == "__main__":
-    plot_error(lorenz_63, 20, 2000, 200)
+    plot_error(lorenz_63, 20, 2000, 2000)

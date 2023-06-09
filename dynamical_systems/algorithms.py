@@ -20,10 +20,9 @@ np.random.seed(42493874)
 
 
 def find_approximation(system: callable, t1: float,
-                       N=1000, D_r=400, w=0.1, b=4, beta=1E-5,
-                       noisy=False, eps=0.2):
+                       N=1000, D_r=400, w=0.1, b=4, beta=1E-5):
     dt = t1/(N+1)
-    U: np.ndarray = system(np.arange(0, t1, dt), noisy, eps)
+    U: np.ndarray = system(np.arange(0, t1, dt))
     D = U.shape[0]
     U_o = U[:, 1:]
     U_i = U[:, :-1]
