@@ -10,15 +10,17 @@ import datetime
 
 
 if __name__ == "__main__":
-    b_size = 10
+    b_size = 8
     b_max = 4
-    w_size = 10
-    w_max = 0.5
-    T = 25
-    N = 2000
-    D_r = 1500
-    realisations = 1
-    T_f_matrix = np.empty((b_size+1, w_size+1))
+    w_size = 8
+    w_max = 0.4
+    T = 400
+    N = 200000
+    D_r = 300
+    noisy = False
+    realisations = 5
+    T_f_mean = np.empty((b_size+1, w_size+1))
+    T_f_sd = np.empty((b_size + 1, w_size + 1))
     i = 0
     start = time.time()
     for b_ in range(b_size+1):
@@ -33,17 +35,26 @@ if __name__ == "__main__":
                   f" {datetime.timedelta(seconds=secs)}", end="\r")
             w = w_ * (w_max/(w_size+1))
             for _ in range(realisations):
-                U, W_LR, W_in, b_in, dt = find_approximation(lorenz_63, T, N=N, D_r=D_r, b=b, w=w)
+                U, W_LR, W_in, b_in, dt = find_approximation(lorenz_63, T, N=N, D_r=D_r, b=b, w=w, noisy=noisy)
                 tau_f = propagate_until_diverge(U, T, W_LR, W_in, b_in)
                 tau_f_list.append(tau_f)
-            T_f_matrix[b_, w_] = sum(tau_f_list)/realisations
+            T_f_mean[b_, w_] = sum(tau_f_list)/realisations
+            T_f_sd[b_, w_] = np.std(tau_f_list)
     fig = plt.figure()
-    ax = fig.add_subplot(1, 1, 1)
-    ax.set_title(r"A plot of forecast time $\tau_f$ for different $w$ and $b$.")
-    im = ax.imshow(T_f_matrix, origin="lower", extent=[0, w_max, 0, b_max], aspect=w_max/b_max, cmap="inferno")
-    cbar = plt.colorbar(im, ax=ax, cmap="inferno")
-    cbar.set_label(r"$\tau_f$")
-    ax.set_xlabel("$w$")
-    ax.set_ylabel("$b$")
+    ax_mean = fig.add_subplot(1, 2, 1)
+    ax_std = fig.add_subplot(1, 2, 2)
+    ax_mean.set_title(r"Mean of $\tau_f$.")
+    im_mean = ax_mean.imshow(T_f_mean, origin="lower", extent=[0, w_max, 0, b_max], aspect=w_max/b_max, cmap="inferno")
+    cbar = plt.colorbar(im_mean, ax=ax_mean, cmap="inferno", shrink=0.5)
+    cbar.set_label(r"$\mu_{\tau_f}$")
+    ax_mean.set_xlabel("$w$")
+    ax_mean.set_ylabel("$b$")
+    ax_std.set_title(r"Standard deviation of $\tau_f$.")
+    im_std = ax_std.imshow(T_f_sd, origin="lower", extent=[0, w_max, 0, b_max], aspect=w_max / b_max, cmap="inferno")
+    cbar = plt.colorbar(im_std, ax=ax_std, cmap="inferno", shrink=0.5)
+    cbar.set_label(r"$\sigma_{\tau_f}$")
+    ax_mean.set_xlabel("$w$")
+    ax_mean.set_ylabel("$b$")
+    fig.tight_layout(pad=2.0)
     plt.show()
     plt.savefig(f"plot_images/w-b_{w_size}x{b_size}_N{N}Dr{D_r}.png")

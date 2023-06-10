@@ -8,22 +8,26 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def lorenz_63_plot():
+def plot_error(system: callable, T, N, D_r, noisy=False):
     fig = plt.figure()
-    ax3d = fig.add_subplot(1, 2, 1, projection='3d')
-    ax2d = fig.add_subplot(1, 2, 2)
-    U, W_LR, W_in, b_in, dt = find_approximation(lorenz_63, 30, N=5000, D_r=5000)
+    U, W_LR, W_in, b_in, dt = find_approximation(system, T, N=N, D_r=D_r, noisy=noisy)
     U_hat = propagate_from_u0(U, W_LR, W_in, b_in)
+    if U.shape[0] == 3:
+        ax3d = fig.add_subplot(1, 2, 1, projection='3d')
+    else:
+        ax3d = fig.add_subplot(1, 2, 1)
+    ax3d.set_aspect("equal")
+    ax2d = fig.add_subplot(1, 2, 2)
+    ax3d.plot(*U, label="$U$", linewidth=0.5)
     ax3d.plot(*U_hat, label=r"$\hat{U}$")
-    ax3d.plot(*U, label="$U$")
     ax3d.legend()
-    ax2d.semilogy(np.linspace(0, 30, 5001), np.apply_along_axis(np.linalg.norm, 0, (U_hat - U)))
+    ax2d.semilogy(np.linspace(0, T, N+1), np.apply_along_axis(np.linalg.norm, 0, (U_hat - U)))
     ax2d.set_xlabel("t")
     ax2d.set_ylabel("Log error")
-    ax3d.set_title("Lorenz-63 System")
-    fig.tight_layout(pad=3.0)
+    ax3d.set_title(("Noisy " if noisy else "")+r"Solution $U$ and approximation $\hat{U}$")
+    fig.tight_layout(pad=1.0)
     plt.show()
 
 
 if __name__ == "__main__":
-    lorenz_63_plot()
+    plot_error(linear_system, 2*np.pi, 200, 100, noisy=True)
