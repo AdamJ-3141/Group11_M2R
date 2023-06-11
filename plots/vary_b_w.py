@@ -10,15 +10,15 @@ import datetime
 
 
 if __name__ == "__main__":
-    b_size = 8
+    b_size = 300
     b_max = 4
-    w_size = 8
+    w_size = 300
     w_max = 0.4
     T = 400
-    N = 200000
-    D_r = 300
+    N = 20000
+    D_r = 400
     noisy = False
-    realisations = 5
+    realisations = 10
     T_f_mean = np.empty((b_size+1, w_size+1))
     T_f_sd = np.empty((b_size + 1, w_size + 1))
     i = 0
@@ -57,4 +57,4 @@ if __name__ == "__main__":
     ax_mean.set_ylabel("$b$")
     fig.tight_layout(pad=2.0)
     plt.show()
-    plt.savefig(f"plot_images/w-b_{w_size}x{b_size}_N{N}Dr{D_r}.png")
+    print(f"Elapsed Time: {datetime.timedelta(seconds=round(time.time()-start))}")
