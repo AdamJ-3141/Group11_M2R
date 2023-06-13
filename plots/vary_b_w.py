@@ -35,7 +35,7 @@ if __name__ == "__main__":
                   f" {datetime.timedelta(seconds=secs)}", end="\r")
             w = w_ * (w_max/(w_size+1))
             for _ in range(realisations):
-                U, W_LR, W_in, b_in, dt = find_approximation(lorenz_63, T, N=N, D_r=D_r, b=b, w=w, noisy=noisy)
+                U_exact, U, W_LR, W_in, b_in, dt = find_approximation(lorenz_63, T, N=N, D_r=D_r, b=b, w=w, noisy=noisy)
                 tau_f = propagate_until_diverge(U, T, W_LR, W_in, b_in)
                 tau_f_list.append(tau_f)
             T_f_mean[b_, w_] = sum(tau_f_list)/realisations

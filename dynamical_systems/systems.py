@@ -27,7 +27,7 @@ def lorenz_63(t, noisy, eps):
     else:
         noise_matrix = np.zeros(U.shape)
     U_obs = U.copy()
-    U_obs += noise_matrix
+    U_obs[:, 1:] += noise_matrix[:, 1:]
     return U, U_obs
 
 
@@ -46,5 +46,5 @@ def linear_system(t, noisy, eps, c1=1, c2=1):
     else:
         noise_matrix = np.zeros(U.shape)
     U_obs = U.copy()
-    U_obs += noise_matrix
+    U_obs[:, 1:] += noise_matrix[:, 1:]
     return U, U_obs
