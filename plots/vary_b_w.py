@@ -10,15 +10,15 @@ import datetime
 
 
 if __name__ == "__main__":
-    b_size = 8
+    b_size = 300
     b_max = 4
-    w_size = 8
+    w_size = 300
     w_max = 0.4
     T = 400
-    N = 200000
-    D_r = 300
+    N = 20000
+    D_r = 400
     noisy = False
-    realisations = 5
+    realisations = 10
     T_f_mean = np.empty((b_size+1, w_size+1))
     T_f_sd = np.empty((b_size + 1, w_size + 1))
     i = 0
@@ -35,7 +35,7 @@ if __name__ == "__main__":
                   f" {datetime.timedelta(seconds=secs)}", end="\r")
             w = w_ * (w_max/(w_size+1))
             for _ in range(realisations):
-                U, W_LR, W_in, b_in, dt = find_approximation(lorenz_63, T, N=N, D_r=D_r, b=b, w=w, noisy=noisy)
+                U_exact, U, W_LR, W_in, b_in, dt = find_approximation(lorenz_63, T, N=N, D_r=D_r, b=b, w=w, noisy=noisy)
                 tau_f = propagate_until_diverge(U, T, W_LR, W_in, b_in)
                 tau_f_list.append(tau_f)
             T_f_mean[b_, w_] = sum(tau_f_list)/realisations
@@ -57,4 +57,4 @@ if __name__ == "__main__":
     ax_mean.set_ylabel("$b$")
     fig.tight_layout(pad=2.0)
     plt.show()
-    plt.savefig(f"plot_images/w-b_{w_size}x{b_size}_N{N}Dr{D_r}.png")
+    print(f"Elapsed Time: {datetime.timedelta(seconds=round(time.time()-start))}")
