@@ -21,13 +21,14 @@ def lorenz_63_system(u, t):
 def lorenz_63(t, noisy, eps):
     u0 = np.array([1., 1., 1.])
     sol: np.ndarray = odeint(lorenz_63_system, u0, t)
-    U_o = sol[:, :3].transpose()
+    U = sol[:, :3].transpose()
     if noisy:
-        noise_matrix = np.random.uniform(-eps, eps, size=U_o.shape)
+        noise_matrix = eps*np.random.normal(size=U.shape)
     else:
-        noise_matrix = np.zeros(U_o.shape)
-    U_o += noise_matrix
-    return U_o
+        noise_matrix = np.zeros(U.shape)
+    U_obs = U.copy()
+    U_obs += noise_matrix
+    return U, U_obs
 
 
 def linear_system(t, noisy, eps, c1=1, c2=1):
@@ -39,10 +40,11 @@ def linear_system(t, noisy, eps, c1=1, c2=1):
     """
     x = c1 * sin(t) - c2 * cos(t)
     y = c1 * cos(t) + c2 * sin(t)
-    U_o = np.array([x, y])
+    U = np.array([x, y])
     if noisy:
-        noise_matrix = np.random.uniform(-eps, eps, size=U_o.shape)
+        noise_matrix = eps*np.random.normal(size=U.shape)
     else:
-        noise_matrix = np.zeros(U_o.shape)
-    U_o += noise_matrix
-    return U_o
+        noise_matrix = np.zeros(U.shape)
+    U_obs = U.copy()
+    U_obs += noise_matrix
+    return U, U_obs

@@ -20,21 +20,22 @@ def factor_int(n):
 
 def plot_error(system: callable, T, N, D_r, noisy=False):
     fig = plt.figure()
-    U, W_LR, W_in, b_in, dt = find_approximation(system, T, N=N, D_r=D_r, noisy=noisy)
-    U_hat = propagate_from_u0(U, W_LR, W_in, b_in)
-    if U.shape[0] == 3:
+    U_exact, U_obs, W_LR, W_in, b_in, dt = find_approximation(system, T, N=N, D_r=D_r, noisy=noisy)
+    U_hat = propagate_from_u0(U_obs, W_LR, W_in, b_in)
+    if U_obs.shape[0] == 3:
         ax3d = fig.add_subplot(1, 2, 1, projection='3d')
     else:
         ax3d = fig.add_subplot(1, 2, 1)
     ax3d.set_aspect("equal")
     ax2d = fig.add_subplot(1, 2, 2)
-    ax3d.plot(*U, label="$U$", linewidth=0.5)
+    ax3d.plot(*U_exact, "--", label="$U$", linewidth=0.4)
+    ax3d.plot(*U_obs, label="$U_{obs}$", linewidth=0.6)
     ax3d.plot(*U_hat, label=r"$\hat{U}$")
     ax3d.legend()
-    ax2d.semilogy(np.linspace(0, T, N+1), np.apply_along_axis(np.linalg.norm, 0, (U_hat - U)))
+    ax2d.semilogy(np.linspace(0, T, N+1), np.apply_along_axis(np.linalg.norm, 0, (U_hat - U_obs)))
     ax2d.set_xlabel("t")
     ax2d.set_ylabel("Log error")
-    ax3d.set_title(("Noisy " if noisy else "")+r"Solution $U$ and approximation $\hat{U}$")
+    ax3d.set_title(("Noisy " if noisy else "")+r"Solution $U_{obs}$ and approximation $\hat{U}$")
     fig.tight_layout(pad=1.0)
     plt.show()
 
@@ -57,4 +58,4 @@ def range_Dr(system: callable, T, N, D_r: list[int], noisy=False):
 
 
 if __name__ == "__main__":
-    range_Dr(lorenz_63, 15, 2000, [50, 100, 500, 2000], noisy=False)
+    plot_error(lorenz_63, 15, 2000, 200, noisy=True)
