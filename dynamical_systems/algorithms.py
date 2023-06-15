@@ -20,7 +20,7 @@ np.random.seed(1)
 
 
 def find_approximation(system: callable, t1: float,
-                       N=1000, D_r=400, w=0.005, b=4, beta=4E-5,
+                       N=1000, D_r=400, w=0.0005, b=4, beta=4E-5,
                        noisy=False, eps=0.2):
     dt = t1/N
     U_exact, U = system(np.linspace(0, t1, N+1), noisy, eps)

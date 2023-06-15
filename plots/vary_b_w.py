@@ -10,15 +10,15 @@ import datetime
 
 
 if __name__ == "__main__":
-    b_size = 200
+    b_size = 60
     b_max = 4
-    w_size = 200
+    w_size = 60
     w_max = 0.4
-    T = 40
-    N = 2000
+    T = 80
+    N = 4000
     D_r = 1000
-    noisy = True
-    realisations = 10
+    noisy = False
+    realisations = 50
     T_f_mean = np.empty((b_size+1, w_size+1))
     T_f_sd = np.empty((b_size + 1, w_size + 1))
     i = 0
