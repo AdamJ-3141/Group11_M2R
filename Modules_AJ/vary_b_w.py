@@ -16,7 +16,7 @@ if __name__ == "__main__":
     w_max = 0.4
     T = 80
     N = 4000
-    D_r = 1000
+    D_r = 400
     noisy = False
     realisations = 50
     T_f_mean = np.empty((b_size+1, w_size+1))

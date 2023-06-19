@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-filename = 'data/tau.npy'
+filename = '../Notebooks_ZN/data/tau.npy'
 
 with open(filename, 'rb') as f:
     Tau = np.load(f)
